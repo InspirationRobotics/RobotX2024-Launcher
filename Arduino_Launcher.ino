@@ -1,4 +1,4 @@
-const int relays[] = {10, 11, 12, 9};  // Relay pins for the launchers
+const int relays[] = {10, 11, 12};  // Relay pins for the launchers (3 launchers)
 
 void setup() {
     Serial.begin(9600);  // Initialize serial communication at 9600 baud rate
@@ -12,16 +12,19 @@ void setup() {
 void loop() {
     if (Serial.available() > 0) {
         int command = Serial.read() - '0';  // Read command from Jetson (convert char to int)
-        
-        if (command >= 1 && command <= 4) {  // Check if command is valid (1, 2, 3, or 4)
+
+
+        if (command >= 1 && command <= 3) {  // Check if command is valid (1, 2, or 3)
             activateRelay(command);  // Activate the corresponding relay
+        } else {
+            Serial.println("Invalid command received.");
         }
     }
 }
 
 // Function to activate the relay for the corresponding launcher
 void activateRelay(int launcher) {
-    int relayIndex = launcher - 1;  // Map command (1-4) to relay index (0-3)
+    int relayIndex = launcher - 1;  // Map command (1-3) to relay index (0-2)
     
     digitalWrite(relays[relayIndex], LOW);   // Turn on the relay (launcher)
     Serial.print("Activating launcher: ");
@@ -33,3 +36,4 @@ void activateRelay(int launcher) {
     Serial.print("Deactivating launcher: ");
     Serial.println(launcher);
 }
+
